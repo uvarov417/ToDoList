@@ -2,58 +2,20 @@
 
 namespace ToDoList
 {
-    internal class Program
+    public class ToDoItem
     {
-        private static List<ToDoItem> _toDoList = new List<ToDoItem>();
+        public string Content { get; set; }
+        public DateTime CreationDate { get; set; }
 
-        static void Main(string[] args)
+        public ToDoItem(string content)
         {
-            while (true)
-            {
-                Console.Clear();
-                ShowMenu();
-                var pressedKey = Console.ReadKey(true);
-                if (pressedKey.Key == ConsoleKey.A)
-                {
-                    AddToDo();
-                }
-                else if (pressedKey.Key == ConsoleKey.S)
-                {
-                    ShowToDoItems();
-                }
-                else if (pressedKey.Key == ConsoleKey.Q)
-                {
-                    return;
-                }
-            }
+            Content = content;
+            CreationDate = DateTime.Now;
         }
 
-        private static void ShowToDoItems()
+        public override string ToString()
         {
-            if (_toDoList.Count == 0)
-            {
-                Console.WriteLine("У вас нет дел!");
-                return;
-            }
-
-            foreach (var item in _toDoList)
-            {
-                Console.WriteLine(item);
-            }
-            Console.WriteLine("Нажмите любую клавишу для продолжения...");
-            Console.ReadKey();
-        }
-
-        private static void AddToDo()
-        {
-            Console.WriteLine("Введите описание задачи:\r\n");
-            var content = Console.ReadLine();
-            _toDoList.Add(new ToDoItem(content));
-        }
-
-        private static void ShowMenu()
-        {
-            Console.WriteLine("Выберите действие: \r\nA - добавить запись\r\nS - показать все записи\r\nQ - выход\r\n");
+            return Content + " Дата создания: " + CreationDate.ToShortDateString() + " " + CreationDate.ToShortTimeString();
         }
     }
 
