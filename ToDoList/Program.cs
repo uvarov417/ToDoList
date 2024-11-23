@@ -1,10 +1,44 @@
-﻿namespace ToDoList
+﻿
+
+namespace ToDoList
 {
     internal class Program
     {
+        private static List<ToDoItem> _toDoList = new List<ToDoItem>();
+
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello, World!");
+            while (true)
+            {
+                ShowMenu();
+                var pressedKey = Console.ReadKey();
+                if (pressedKey.Key == ConsoleKey.A)
+                {
+                    AddToDo();
+                }
+            }
+        }
+
+        private static void AddToDo()
+        {
+            Console.WriteLine("Введите описание задачи:\r\n");
+            var content = Console.ReadLine();
+            _toDoList.Add(new ToDoItem(content));
+        }
+
+        private static void ShowMenu()
+        {
+            Console.WriteLine("Выберите действие: \r\nA - добавить запись\r\n");
+        }
+    }
+
+    public class ToDoItem
+    {
+        public string Content { get; set; }
+
+        public ToDoItem(string content)
+        {
+            Content = content;
         }
     }
 
