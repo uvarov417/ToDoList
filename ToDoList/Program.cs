@@ -1,4 +1,6 @@
-﻿
+﻿// Возможность ставить дедлайн
+// 1. Спросить у пользователя, хочет ли он поставить дедлайн на задачу
+// 2. Если хочет поставить дедлайн, то попросить ввести дату и сохранить. Если нет, то ничего не записывать
 
 namespace ToDoList
 {
@@ -46,9 +48,44 @@ namespace ToDoList
 
         private static void AddToDo()
         {
+            var toDoItem = new ToDoItem();
             Console.WriteLine("Введите описание задачи:\r\n");
             var content = Console.ReadLine();
-            _toDoList.Add(new ToDoItem(content));
+            toDoItem.Content = content;
+            Console.WriteLine("Хотите поставить крайний срок? (Y/N)");
+            
+            while (true)
+            {
+                var answer = Console.ReadLine()?.ToUpperInvariant();
+                Console.WriteLine();
+                if (answer == "Y")
+                {
+                    Console.WriteLine("Введите дату крайнего срока (день/месяц/год часы:минуты)");
+                    while (true)
+                    {
+                        var dateString = Console.ReadLine();
+                        if (DateTime.TryParse(dateString, out var deadline))
+                        {
+                            toDoItem.Deadline = deadline;
+                            break;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Неверный формат даты");
+                        }
+                    }
+                    break;
+                }
+                else if (answer == "N")
+                {
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("Неверный формат ответа");
+                }
+            }
+            _toDoList.Add(toDoItem);
         }
 
         private static void ShowMenu()

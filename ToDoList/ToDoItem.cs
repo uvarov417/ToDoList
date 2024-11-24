@@ -6,6 +6,7 @@ namespace ToDoList
     {
         public string Content { get; set; }
         public DateTime CreationDate { get; set; }
+        public DateTime? Deadline { get; set; }
 
         public ToDoItem(string content)
         {
@@ -13,9 +14,22 @@ namespace ToDoList
             CreationDate = DateTime.Now;
         }
 
+        public ToDoItem(string content, DateTime? deadline)
+            : this(content)
+        {
+            Deadline = deadline;
+        }
+
+        public ToDoItem()
+            : this(null)
+        {
+
+        }
+
         public override string ToString()
         {
-            return Content + " Дата создания: " + CreationDate.ToShortDateString() + " " + CreationDate.ToShortTimeString();
+            var deadlineString = Deadline.HasValue ? ("Сделать до " + Deadline.Value.ToShortDateString() + " " + Deadline.Value.ToShortTimeString()) : "";
+            return Content + " Дата создания: " + CreationDate.ToShortDateString() + " " + CreationDate.ToShortTimeString() + " " + deadlineString;
         }
     }
 
