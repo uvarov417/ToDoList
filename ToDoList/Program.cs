@@ -52,41 +52,36 @@ namespace ToDoList
             Console.WriteLine("Введите описание задачи:\r\n");
             var content = Console.ReadLine();
             toDoItem.Content = content;
-            Console.WriteLine("Хотите поставить крайний срок? (Y/N)");
-            
-            while (true)
-            {
-                var answer = Console.ReadLine()?.ToUpperInvariant();
-                Console.WriteLine();
-                if (answer == "Y")
-                {
-                    Console.WriteLine("Введите дату крайнего срока (день/месяц/год часы:минуты)");
-                    while (true)
-                    {
-                        var dateString = Console.ReadLine();
-                        if (DateTime.TryParse(dateString, out var deadline))
-                        {
-                            toDoItem.Deadline = deadline;
-                            break;
-                        }
-                        else
-                        {
-                            Console.WriteLine("Неверный формат даты");
-                        }
-                    }
-                    break;
-                }
-                else if (answer == "N")
-                {
-                    break;
-                }
-                else
-                {
-                    Console.WriteLine("Неверный формат ответа");
-                }
-            }
+            toDoItem = AddDeadline(toDoItem);
             _toDoList.Add(toDoItem);
         }
+
+        private static ToDoItem AddDeadline(ToDoItem item)
+        {
+            var deadlineRequier = AskUser("Хотите поставить крайний срок? (Y/N)", s => new[] {"Y", "N"}.Contains(s, StringComparer.OrdinalIgnoreCase));
+
+            if (deadlineRequier.Equals("Y", StringComparison.OrdinalIgnoreCase))
+            {
+                var dateString = AskUser("Введите дату крайнего срока (день/месяц/год часы:минуты)", s => DateTime.TryParse(s, out var r));
+                item.Deadline = DateTime.Parse(dateString);
+            }
+
+            return item;
+        }
+
+        private static string AskUser(string message, Func<string, bool> validator)
+        {
+            Console.WriteLine(message);
+            while (true)
+            {
+                var userInput = Console.ReadLine();
+                if (validator(userInput))
+                    return userInput;
+                else
+                    Console.WriteLine("Неверный формат ввода");
+            }
+        }
+
 
         private static void ShowMenu()
         {
