@@ -2,14 +2,24 @@
 // 1. Спросить у пользователя, хочет ли он поставить дедлайн на задачу
 // 2. Если хочет поставить дедлайн, то попросить ввести дату и сохранить. Если нет, то ничего не записывать
 
+using System.Drawing;
+
 namespace ToDoList
 {
     internal class Program
     {
-        private static List<ToDoItem> _toDoList = new List<ToDoItem>();
+        private static List<ToDoItem> _toDoList;
+        private static Point _currentCursorPosition;
 
         static void Main(string[] args)
         {
+            _toDoList = new List<ToDoItem>() 
+            {
+                new ToDoItem("Вынести мусор", new DateTime(2025, 1, 1)),
+                new ToDoItem("Сходить в магазин", new DateTime(2024, 12, 1, 17, 0, 0)),
+                new ToDoItem("Дочитать CLR via C#")
+            };
+
             while (true)
             {
                 Console.Clear();
@@ -23,11 +33,33 @@ namespace ToDoList
                 {
                     ShowToDoItems();
                 }
+                else if (pressedKey.Key == ConsoleKey.D)
+                {
+                    RemoveToDo();
+                }
                 else if (pressedKey.Key == ConsoleKey.Q)
                 {
                     return;
                 }
             }
+        }
+
+        private static void RemoveToDo()
+        {
+            //var index = 0;
+            //var cursorPosition = new Point(0, 0);
+
+            //Console.SetCursorPosition(cursorPosition.X, cursorPosition.Y);
+            for (int i = 0; i < _toDoList.Count; i++)
+            {
+                if (i == 0)
+                {
+                    var tuple = Console.GetCursorPosition();
+                    _currentCursorPosition = new Point(tuple.Left, tuple.Top);
+                }
+                Console.WriteLine(_toDoList[i]);
+            }
+            Console.ReadKey();
         }
 
         private static void ShowToDoItems()
@@ -58,7 +90,7 @@ namespace ToDoList
 
         private static ToDoItem AddDeadline(ToDoItem item)
         {
-            var deadlineRequier = AskUser("Хотите поставить крайний срок? (Y/N)", s => new[] {"Y", "N"}.Contains(s, StringComparer.OrdinalIgnoreCase));
+            var deadlineRequier = AskUser("Хотите поставить крайний срок? (Y/N)", s => new[] { "Y", "N" }.Contains(s, StringComparer.OrdinalIgnoreCase));
 
             if (deadlineRequier.Equals("Y", StringComparison.OrdinalIgnoreCase))
             {
@@ -85,7 +117,7 @@ namespace ToDoList
 
         private static void ShowMenu()
         {
-            Console.WriteLine("Выберите действие: \r\nA - добавить запись\r\nS - показать все записи\r\nQ - выход\r\n");
+            Console.WriteLine("Выберите действие: \r\nA - добавить запись\r\nS - показать все записи\r\nD - удалить запись\r\nQ - выход\r\n");
         }
     }
 
